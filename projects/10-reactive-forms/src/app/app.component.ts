@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { ReactiveFormsModule } from '@angular/forms';
+import { ReactiveFormsModule, FormControl, FormGroup } from '@angular/forms';
 
 @Component({
   selector: 'app-root',
@@ -8,14 +8,20 @@ import { ReactiveFormsModule } from '@angular/forms';
   template: `
     <article>
       <h1>Blog Post</h1>
-      <form name="blogForm">
+      <form name="blogForm" [formGroup]="blogForm" (ngSubmit)="handleFormSubmit()">
         <section>
-          <label for="title">Post Title</label>
-          <input type="text" id="title" />
+            <label for="title">Post Title</label>
+            <input type="text" id="title" formControlName='title' />
 
-          <label for="body">Post Body</label>
-          <textarea name="" id="body" cols="30" rows="10"></textarea>
-        </section>
+            <label for="body">Post Body</label>
+            <textarea 
+              formControlName='body' 
+              name="" 
+              id="body" 
+              cols="30" 
+              rows="10">
+            </textarea>
+          </section>
         <button type="submit">Submit Post</button>
       </form>
     </article>
@@ -23,9 +29,19 @@ import { ReactiveFormsModule } from '@angular/forms';
   styles: [],
 })
 export class AppComponent {
-  handleFormSubmit() {}
+  blogForm = new FormGroup ({
+    title: new FormControl(''),
+    body: new FormControl('')
+  })
+  handleFormSubmit() {
+    this.postBlog(this.blogForm.value.title, this.blogForm.value.body)
+    console.log('form submited')
+  }
 
-  postBlog(title: string | null | undefined, body: string | null | undefined) {
+  postBlog(
+    title: string | null | undefined, 
+    body: string | null | undefined
+    ) {
     console.log(`Posting blog titles ${title}, with the contents ${body}.`);
   }
 }
